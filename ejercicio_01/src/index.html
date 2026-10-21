@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src https://rickandmortyapi.com; img-src 'self' https://rickandmortyapi.com data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Portal Rick & Morty - Aplicación de Escritorio</title>
+  <link rel="icon" href="../assets/icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-logo-wrapper">
+          <img src="../assets/icon.png" alt="Logo de la app" class="brand-logo" width="44" height="44">
+          <span class="portal-ring"></span>
+        </div>
+        <div class="brand-text">
+          <div class="badge-row">
+            <span class="desktop-badge" id="appPlatformBadge">⚡ ESCRITORIO · ELECTRON</span>
+            <span class="version-badge" id="appVersionBadge">v1.0.0</span>
+          </div>
+          <h1>Portal Rick & Morty</h1>
+          <p class="subtitle">Explora los personajes del multiverso en tiempo real</p>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-box">
+          <span class="stat-number" id="totalCharactersCount">—</span>
+          <span class="stat-label">Personajes</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-number" id="totalPagesCount">—</span>
+          <span class="stat-label">Páginas</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="controls-card" aria-label="Búsqueda y filtros">
+      <form id="searchForm" class="filter-form" role="search">
+        <div class="form-group search-group">
+          <label for="queryInput">
+            <svg class="field-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+            Nombre del personaje
+          </label>
+          <div class="input-wrapper">
+            <input 
+              id="queryInput" 
+              type="text" 
+              placeholder="Ej. Rick Sanchez, Morty, Summer…" 
+              maxlength="80" 
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button type="button" id="clearSearchBtn" class="clear-input-btn" title="Borrar texto" aria-label="Borrar texto">✕</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="statusSelect">
+            <svg class="field-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            Estado
+          </label>
+          <select id="statusSelect">
+            <option value="">Todos los estados</option>
+            <option value="alive">Vivo (Alive)</option>
+            <option value="dead">Muerto (Dead)</option>
+            <option value="unknown">Desconocido (Unknown)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="genderSelect">
+            <svg class="field-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m14 10 4-4m0 0h-4m4 0v4M12 16v6m-3-3h6"></path></svg>
+            Género
+          </label>
+          <select id="genderSelect">
+            <option value="">Todos los géneros</option>
+            <option value="female">Femenino (Female)</option>
+            <option value="male">Masculino (Male)</option>
+            <option value="genderless">Sin género (Genderless)</option>
+            <option value="unknown">Desconocido (Unknown)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="speciesSelect">
+            <svg class="field-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 3v18m-9-9h18"></path></svg>
+            Especie
+          </label>
+          <select id="speciesSelect">
+            <option value="">Todas las especies</option>
+            <option value="Human">Humano</option>
+            <option value="Alien">Alienígena</option>
+            <option value="Humanoid">Humanoide</option>
+            <option value="Robot">Robot</option>
+            <option value="Mythological Creature">Criatura Mitológica</option>
+            <option value="Animal">Animal</option>
+            <option value="Cronenberg">Cronenberg</option>
+            <option value="Poopybutthole">Poopybutthole</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="submitSearchBtn" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+            <span>Buscar</span>
+          </button>
+          <button type="button" id="resetBtn" class="btn btn-secondary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+            <span>Restablecer</span>
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <div class="status-bar" id="statusBar" role="status" aria-live="polite">
+      <div class="status-indicator-dot"></div>
+      <span id="statusMessage">Cargando personajes del multiverso…</span>
+    </div>
+
+    <section id="charactersGrid" class="cards-grid" aria-label="Listado de personajes de Rick and Morty">
+    </section>
+
+    <nav class="pagination-bar" aria-label="Navegación de páginas">
+      <button id="prevBtn" class="btn btn-pagination" disabled>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"></path></svg>
+        <span>Anterior</span>
+      </button>
+
+      <div class="page-indicator">
+        <span id="currentPageText">Página 1</span>
+        <span class="page-separator">/</span>
+        <span id="totalPagesText">1</span>
+      </div>
+
+      <button id="nextBtn" class="btn btn-pagination" disabled>
+        <span>Siguiente</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"></path></svg>
+      </button>
+    </nav>
+  </main>
+
+  <div id="characterModal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button id="closeModalBtn" class="modal-close-btn" aria-label="Cerrar modal">&times;</button>
+      <div id="modalBody" class="modal-body">
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>Proyecto Académico · Integración con <strong>The Rick and Morty API</strong></p>
+      <p class="footer-meta">Entorno de Escritorio Electron · Carga local sin servidor web</p>
+    </div>
+  </footer>
+
+</body>
+</html>
